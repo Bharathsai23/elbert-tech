@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pikki - 2D Shooter Game</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f1f1f1;
+    }
+    canvas {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const player1 = {
+      x: 50,
+      y: canvas.height / 2,
+      width: 40,
+      height: 40,
+      speed: 5,
+      color: "red",
+      dx: 0,
+      dy: 0
+    };
+
+    const player2 = {
+      x: canvas.width - 90,
+      y: canvas.height / 2,
+      width: 40,
+      height: 40,
+      speed: 5,
+      color: "blue",
+      dx: 0,
+      dy: 0
+    };
+
+    const bullets = [];
+
+    function drawPlayer(player) {
+      ctx.fillStyle = player.color;
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+
+    function movePlayer(player) {
+      player.x += player.dx;
+      player.y += player.dy;
+
+      // Prevent players from moving off the screen
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+      if (player.y < 0) player.y = 0;
+      if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
+    }
+
+    function drawBullet(bullet) {
+      ctx.fillStyle = "black";
+      ctx.fillRect(bullet.x, bullet.y, 10, 5);
+    }
+
+    function moveBullets() {
+      for (let i = 0; i < bullets.length; i++) {
+        bullets[i].x += bullets[i].dx;
+        // Remove bullets that go off screen
+        if (bullets[i].x > canvas.width || bullets[i].x < 0) {
+          bullets.splice(i, 1);
+          i--;
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      drawPlayer(player1);
+      drawPlayer(player2);
+      movePlayer(player1);
+      movePlayer(player2);
+
+      moveBullets();
+      bullets.forEach(drawBullet);
+      
+      requestAnimationFrame(draw);
+    }
+
+    // Control the players
+    document.addEventListener("keydown", (e) => {
+      // Player 1 Controls (WASD)
+      if (e.key === "w") player1.dy = -player1.speed;
+      if (e.key === "s") player1.dy = player1.speed;
+      if (e.key === "a") player1.dx = -player1.speed;
+      if (e.key === "d") player1.dx = player1.speed;
+
+      // Player 2 Controls (Arrow Keys)
+      if (e.key === "ArrowUp") player2.dy = -player2.speed;
+      if (e.key === "ArrowDown") player2.dy = player2.speed;
+      if (e.key === "ArrowLeft") player2.dx = -player2.speed;
+      if (e.key === "ArrowRight") player2.dx = player2.speed;
+      
+      // Player 1 Shooting (Space)
+      if (e.key === " ") {
+        bullets.push({ x: player1.x + player1.width, y: player1.y + player1.height / 2, dx: 5 });
+      }
+
+      // Player 2 Shooting (Enter)
+      if (e.key === "Enter") {
+        bullets.push({ x: player2.x, y: player2.y + player2.height / 2, dx: -5 });
+      }
+    });
+
+    document.addEventListener("keyup", (e) => {
+      // Stop player movement when key is released
+      if (e.key === "w" || e.key === "s") player1.dy = 0;
+      if (e.key === "a" || e.key === "d") player1.dx = 0;
+
+      if (e.key === "ArrowUp" || e.key === "ArrowDown") player2.dy = 0;
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") player2.dx = 0;
+    });
+
+    draw(); // Start the game loop
+  </script>
+</body>
+</html>
