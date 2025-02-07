@@ -1,7 +1,7 @@
 function greet(name) {
     return `Hello, ${name}!`;
   }
-console.log(greet("MrNBT 123"));
+console.log(greet("bharath"));
 
 
 
@@ -9,18 +9,18 @@ console.log(greet("MrNBT 123"));
   return `Hello, ${name}!`;
 };
 
- console.log(greet("FE: MrNBT")); 
+ console.log(greet("chandu")); 
 
 
 
 
  const greet = (name) => `Hello, ${name}!`;
- console.log(greet("Balaji")); 
+ console.log(greet("sai")); 
 
 
 
 (function() {
-    console.log("This runs right away!");
+    console.log("i am form suryapet");
   })();
 
 
